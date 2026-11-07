@@ -1,0 +1,76 @@
+What happens when you run a C program like ./a.out ?
+
+The shell locates and verifies the executable (a.out) using the "./" path.
+The operating system loads the binary into memory using system calls, mapping its various segments.
+For dynamically linked programs, the dynamic linker loads and links shared libraries.
+The C runtime sets up the environment and eventually calls the user-defined main() function.
+Upon completion, the process exits gracefully, releasing resources back to the operating system.
+
+Explain the difference between a Thread and a Process??
+
+🧵 Detailed Explanation
+1. Process
+A process is an independent execution environment.
+It contains its own virtual memory, system resources, and at least one thread.
+Processes do not share memory with other processes by default.
+Communication between processes requires IPC mechanisms like pipes, sockets, shared memory, or message queues.
+Examples: Running a web browser, a text editor, or a terminal emulator are separate processes.
+2. Thread
+A thread is a unit of execution within a process.
+Multiple threads within the same process share the same memory and resources.
+Threads have their own program counter, stack, and registers but share code and data segments.
+Threads enable concurrent execution within the same application, improving responsiveness and performance.
+Examples: A web browser process might have multiple threads for rendering, user input, and network communication.
+
+
+What is a system call? Give an example
+
+Definition and Core Understanding
+A system call is a mechanism that allows a user-level application (program) to request a service from the operating system's kernel. Since user programs run in user mode with restricted privileges, they cannot directly perform certain critical operations such as accessing hardware devices, managing files, or allocating memory. System calls provide a controlled interface for these operations by switching the CPU from user mode to kernel mode, where the OS has full control.
+
+Key Points:
+Acts as a bridge between user applications and the OS kernel.
+Provides access to hardware and system resources safely.
+Ensures security and stability by validating requests.
+Typically implemented via software interrupts or special CPU instructions.
+Step-by-Step Explanation
+User Program Requests Service:
+The program calls a library function (e.g., from the C standard library) that internally invokes a system call.
+
+Trap to Kernel Mode:
+The CPU switches from user mode to kernel mode using a special instruction (e.g., int 0x80 in x86 Linux or syscall instruction in x86-64).
+
+Kernel Handles Request:
+The OS kernel identifies the requested service by a system call number and executes the corresponding kernel routine.
+
+Return to User Mode:
+After completing the task, the kernel returns control to the user program, passing back any results or error codes.
+
+
+Real-World Example: The write System Call in Linux
+The write system call is used to write data to a file descriptor (e.g., a file, terminal, or socket).
+
+Prototype in C:
+Copy
+c
+ssize_t write(int fd, const void *buf, size_t count);
+fd: File descriptor (e.g., 1 for standard output).
+buf: Pointer to the buffer containing data to write.
+count: Number of bytes to write.
+Example Code Snippet:
+Copy
+c
+#include <unistd.h>
+
+int main() {
+    const char *msg = "Hello, system call!\n";
+    // Write message to standard output (fd = 1)
+    write(1, msg, 18);
+    return 0;
+}
+What happens internally:
+The write function triggers the write system call.
+The kernel receives the request, writes the data to the terminal.
+Control returns to the program.
+
+

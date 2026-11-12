@@ -252,3 +252,54 @@ Size of the PCB: It might seem that a PCB is minimal; however, in modern operati
 Conclusion
 The Process Control Block is essential for any multitasking operating system. It encapsulates all necessary information required to manage process execution, maintain proper scheduling, and ensure appropriate resource allocation. Understanding the PCB is fundamental when studying operating systems, as it provides a window into how processes are managed at a low level.
 
+What is Context Switching?
+Context Switching is a fundamental concept in operating systems where the CPU switches from executing one process or thread to another. This allows multiple processes to share a single CPU resource efficiently, giving the illusion of parallelism in a single-core processor.
+
+Why is Context Switching Important?
+Enables multitasking by sharing CPU time between processes.
+Allows the operating system to manage multiple applications simultaneously.
+Helps in handling interrupts and system calls.
+Ensures fair CPU time distribution and responsiveness.
+How Context Switching Works (Step-by-Step)
+Process Running: The CPU executes instructions of the current running process (Process A).
+Interrupt or Time Slice Expiry: An interrupt occurs (e.g., timer interrupt) or the process voluntarily yields the CPU.
+Saving Context: The OS saves the current process's context (CPU registers, program counter, stack pointer, etc.) into its Process Control Block (PCB).
+Loading New Context: The OS loads the context of the next scheduled process (Process B) from its PCB.
+Resume Execution: CPU resumes execution from where Process B left off.
+Diagram of Context Switching
+Copy
+plaintext
++----------------+                 +----------------+
+|  Process A PCB |                 |  Process B PCB |
+|----------------|                 |----------------|
+| Registers      |                 | Registers      |
+| Program Counter|                 | Program Counter|
+| Stack Pointer  |                 | Stack Pointer  |
++----------------+                 +----------------+
+        ^                                  ^
+        |                                  |
+        |                                  |
+        |                                  |
++----------------+                 +----------------+
+|  CPU Registers |                 |  CPU Registers |
+| (Current State)|                 | (Loaded State) |
++----------------+                 +----------------+
+        |                                  |
+        |                                  |
+        |                                  |
+        +------------ Context Switch ------+
+Key Components Saved During Context Switch
+Program Counter (PC): Points to the next instruction to execute.
+CPU Registers: General purpose registers, status registers.
+Stack Pointer (SP): Points to the current stack frame.
+Memory Management Info: Page tables or segment registers.
+Process State: Ready, Running, Waiting, etc.
+
+When a process is created in Unix:
+
+The parent process calls fork().
+The kernel creates a new PCB and duplicates the parent's memory space.
+The child process receives a unique PID.
+The child can call exec() to load a new program.
+The scheduler manages execution of the new process.
+This fork-exec model is the cornerstone of Unix process creation, enabling flexible and efficient multitasking.
